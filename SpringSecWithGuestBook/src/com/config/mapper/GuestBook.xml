@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<!-- 테이블마다 mapper를 만들어주는게 관리하기 편하다. 따라서 namespace는 테이블명의 이름이 됨. -->
+<mapper namespace="GuestBook">
+	<!-- resultMap의 type에대한 변수명이 id 이다. resultMap은 ResultSet과 비슷함.-->
+    <resultMap type="com.dto.GuestBookDto" id="GuestBookDto">
+    	<!-- DB의 PK가 id로 쓰인다. 나머지는 result로 등록시켜주면된다. 
+    		column은 DB의 컬럼명, property는 java로 작성한 Dto(com.resv.dto.GuestBookDto)의 변수명 -->
+    	<id column="GUESTBOOK_ID" property="guestbookId"/>
+    	<result column="REGISTER" property="register"/>
+    	<result column="NAME" property="name"/>
+    	<result column="EMAIL" property="email"/>
+    	<result column="PASSWORD" property="password"/>
+    	<result column="CONTENT" property="content"/>
+    </resultMap>
+    
+    <!-- id는 함수명처럼 쓰이지만 오버로딩 되지는 않는다. id는 유니크한 값을 가져야한다. -->
+    <!-- Dao 에서 아래 셀렉트문의 id를 함수명처럼 가져다 쓰고있고, 결과값은 id 가 GuestBookDto인 위에서 지정한 resultMap에 저장시켜주겠다는 의미
+    	resultMap = id로 지정할수도 있지만, type 으로도 지정할 수 있다. type 으로 지정할경우, com.resv.dto.GuestBookDto 가 작성될것이다. 
+    	실제 java로 작성된 Dao에서 아래 코드문처럼 사용되고있다.  
+    	return sqlSessionFactory.openSession().selectList("GuestBook.getGuestBook"); -->
+    <!-- xml에서 부등호 < 나 > 가 태그로 먹히기때문에, 문자열그대로 적용시키려면 <![CDATA[?]]> 안에 부등호를 넣어주어야한다. -->
+    <select id = "getGuestBook" resultMap = "GuestBookDto">
+    	select * from GUESTBOOK
+    	where GUESTBOOK_ID <![CDATA[<]]> 10
+    </select>
+    
+    <!-- 파라미터의 데이터타입이 기본 혹은 String일때 파라미터가 한개라면 명칭이 무엇이든, 들어온애를 세팅해준다. -->
+    <!-- 파라미터의 데이터타입이 객체(Dto) 타입이라면 guestbookId라는 명칭과 동일한, 해당 Dto 에 작성된 프로퍼티(변수명)를 찾아 값이 들어간다. 
+    	 해당 Dto에 파라미터 guestbookId와 동일한 필드명이 존재하지 않을경우, 에러가 발생된다. -->
+    
+    <select id = "getGuestBookById" resultMap="GuestBookDto">
+    	select * from GUESTBOOK
+    	where GUESTBOOK_ID = #{guestbookId} OR GUESTBOOK_ID = #{guestbookId2}
+    </select>
+    
+    <!-- 이하 실제 GuestBook Dao 쿼리문 -->
+    <insert id="insertGuestBook">
+    	insert into GUESTBOOK (REGISTER,NAME,EMAIL,PASSWORD,CONTENT) 
+    	values(#{register},#{name},#{email},#{password},#{content})
+    </insert>
+    
+    <update id="updateGuestBook">
+    	update GUESTBOOK set NAME = #{name}, EMAIL = #{email}, CONTENT = #{content}
+    	where GUESTBOOK_ID = #{guestbookId}
+    </update>
+    
+    <delete id="deleteGuestBook">
+    	delete from GUESTBOOK where GUESTBOOK_ID = #{guestbookID}
+    </delete>
+    
+    <select id="getCountGuestBook" resultType = "int">
+    	select count(*) from GUESTBOOK
+    </select>
+    
+    <select id="getListGuestbook" resultMap="GuestBookDto">
+    	select * from GUESTBOOK order by GUESTBOOK_ID desc LIMIT #{start},#{end} 
+    </select>
+    
+    <select id="getGuestbook" resultMap="GuestBookDto">
+    	select * from GUESTBOOK where GUESTBOOK_ID = #{guestbookId}
+    </select>
+    
+</mapper>

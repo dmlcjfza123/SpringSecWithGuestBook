@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+<!-- default 처리되있는 layout.jsp에 put되는 3인방이 각 tiles 태그의 name에 맞춰 들어가게된다. -->
+	<definition name="default" template="/WEB-INF/views/layout/layout.jsp">
+		<put-attribute name="header" value="/WEB-INF/views/layout/header.jsp" />
+		<put-attribute name="body" value="" />
+		<put-attribute name="footer" value="/WEB-INF/views/layout/footer.jsp" />
+	</definition>
+
+
+
+	<definition name="tiles" extends="default">
+		<put-attribute name="body" value="/WEB-INF/views/layout/mainTest.jsp" />
+	</definition>
+
+<!-- MainTestController 에서 newfile() 메소드 보면 return "TILES/NewFile"; 되고있음.
+	NewFile 이 {1} 자리로 들어가서, NewFile.jsp가 열리는것임.  -->
+	<!-- 참고로 put-attribute name="body" 이니까 , body에 NewFile이 나타나게됨.  -->
+	<definition name="TILES/*" extends="default">
+		<put-attribute name="body" value="/WEB-INF/views/{1}.jsp" />
+	</definition>
+<!-- TILES/*/* 보면 앞 별부터 {1} {2} 순으로 지정됨.
+	마찬가지로,test() 메소드에서  return "TILES/test/NewFile"; test가 {1} 로 NewFile이 {2}로 들어가게됨.
+	이렇게 직접 return 되는것에따라 경로와 매핑되는 jsp 파일을 지정하고싶을때 TILES/ 수식어를 붙인뒤 * 을 통해서 인자처럼 받을 수 있다. -->
+	<!-- 참고로 put-attribute name="body" 이니까 , body에 test가 나타나게됨. -->
+	<definition name="TILES/*/*" extends="default">
+		<put-attribute name="body" value="/WEB-INF/views/{1}/{2}.jsp" />
+	</definition>
+
+</tiles-definitions>

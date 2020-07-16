@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 다른건 다 user 접두사로 맞춰 놨는데 DB 테이블 명칭이 아직  MEMBER 라서 이건 그대로 냅둠. -->
+<mapper namespace="MEMBER">
+
+	<resultMap type="com.dto.UserDto" id="UserDto">
+		<id column="MEMBER_ID" property="userId" />
+		<result column="PASSWORD" property="password" />
+		<result column="REGISTER" property="register" />
+		<result column="NAME" property="name" />
+		<result column="ADDRESS" property="address" />
+		<result column="EMAIL" property="email" />
+	</resultMap>
+	
+	<insert id="insertUser">
+		insert into MEMBER values(#{userId},#{password},#{register},#{name},#{address},#{email})
+	</insert>
+	
+	<select id="getUser" resultMap = "UserDto">
+		select * from MEMBER where MEMBER_ID = #{userId}
+	</select>
+	
+	<update id="updateUser">
+		update MEMBER 
+		set PASSWORD = #{password}, NAME = #{name}, ADDRESS = #{address}, EMAIL = #{email} 
+		where MEMBER_ID = #{userId}
+	</update>
+	
+	<delete id="deleteUser">
+		delete from MEMBER where MEMBER_ID = #{userId}
+	</delete>
+	
+</mapper>

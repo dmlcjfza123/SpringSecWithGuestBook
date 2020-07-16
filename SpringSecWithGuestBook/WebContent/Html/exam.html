@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="../js/jquery-3.4.1.min.js">
+</script>
+ <style>
+  p {
+    margin: 8px;
+    font-size: 16px;
+  }
+  .selected {
+    color: blue;
+  }
+  .highlight {
+    background: yellow;
+  }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+</head>
+<body>
+ 
+<p>Hello</p>
+<p class="remove">and</p>
+<p class="goodbye">Goodbye</p>
+ 
+<button id="btn">button</button>
+ <div><span></span></div>
+ 
+ <ul>
+  <li>list item 1</li>
+  <li>list item 2</li>
+  <li>list item 3</li>
+</ul>
+ 
+<script>
+$( "p" ).last().addClass( "selected" );
+//$(".goodbye").addClass( "selected" );
+//$(".remove").addClass("selected");
+
+$("#btn").click(function (){
+	$(".remove").removeClass("selected");
+})
+
+$( "li" ).add( "p" ).css( "background-color", "red" );
+</script>
+</body>
+</html>
